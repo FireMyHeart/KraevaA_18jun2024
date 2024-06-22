@@ -1,0 +1,471 @@
+{
+	"info": {
+		"_postman_id": "34c511b1-8a7b-471b-8203-66464fe0895b",
+		"name": "Читай-город Test task. Anna Kraeva",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26370113"
+	},
+	"item": [
+		{
+			"name": "AutoAdd",
+			"item": [
+				{
+					"name": "Поиск книги в конкретном городе",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var value = pm.response.json().included[0].attributes.id;\r",
+									"pm.collectionVariables.set(\"bookId\", value);\r",
+									"\r",
+									"var value = pm.response.json().included[0].attributes.url;\r",
+									"pm.collectionVariables.set(\"bookUrl\", value);\r",
+									"\r",
+									"var books = [2976791, 2495750, 2306615]\r",
+									"pm.collectionVariables.set('listOfBooks', books);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://web-gate.chitai-gorod.ru/api/v2/search/product?customerCityId={{cityId}}&phrase={{phrase}}&products%5Bpage%5D=1&products%5Bper-page%5D=48&sortPreset=relevance",
+							"protocol": "https",
+							"host": [
+								"web-gate",
+								"chitai-gorod",
+								"ru"
+							],
+							"path": [
+								"api",
+								"v2",
+								"search",
+								"product"
+							],
+							"query": [
+								{
+									"key": "customerCityId",
+									"value": "{{cityId}}"
+								},
+								{
+									"key": "phrase",
+									"value": "{{phrase}}"
+								},
+								{
+									"key": "products%5Bpage%5D",
+									"value": "1"
+								},
+								{
+									"key": "products%5Bper-page%5D",
+									"value": "48"
+								},
+								{
+									"key": "sortPreset",
+									"value": "relevance"
+								},
+								{
+									"key": null,
+									"value": "",
+									"description": "2976791 - маленькие женщины, 2495750 - Глуховский Сумерки, 2306615 - Цветы для Элдернона",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addListOfBooks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var books = pm.collectionVariables.get('listOfBooks');\r",
+									"if (books.length > 0) {\r",
+									"    pm.collectionVariables.set('bookId', books.shift());\r",
+									"    pm.execution.setNextRequest(\"addListOfBooks\")\r",
+									"}\r",
+									"pm.collectionVariables.set('listOfBooks', books);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{bookId}},\r\n    \"adData\": {\r\n        \"item_list_name\": \"product-page\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://web-gate.chitai-gorod.ru/api/v1/cart/product",
+							"protocol": "https",
+							"host": [
+								"web-gate",
+								"chitai-gorod",
+								"ru"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cart",
+								"product"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get info by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://web-gate.chitai-gorod.ru/api/v1/products/slug/{{bookUrl}}",
+					"protocol": "https",
+					"host": [
+						"web-gate",
+						"chitai-gorod",
+						"ru"
+					],
+					"path": [
+						"api",
+						"v1",
+						"products",
+						"slug",
+						"{{bookUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var value = pm.response.json().products[0].id;\r",
+							"pm.collectionVariables.set(\"delId\", value);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://web-gate.chitai-gorod.ru/api/v1/cart",
+					"protocol": "https",
+					"host": [
+						"web-gate",
+						"chitai-gorod",
+						"ru"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get only id in cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://web-gate.chitai-gorod.ru/api/v1/cart/short",
+					"protocol": "https",
+					"host": [
+						"web-gate",
+						"chitai-gorod",
+						"ru"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart",
+						"short"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change quantity of books in cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"В теле ответа значение ключа quantity — 3\", function () {\r",
+							"pm.expect(jsonData.products[0].quantity).to.eql(3);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": {{delId}},\r\n        \"quantity\": 3\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://web-gate.chitai-gorod.ru/api/v1/cart",
+					"protocol": "https",
+					"host": [
+						"web-gate",
+						"chitai-gorod",
+						"ru"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete one book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://web-gate.chitai-gorod.ru/api/v1/cart/product/{{delId}}",
+					"protocol": "https",
+					"host": [
+						"web-gate",
+						"chitai-gorod",
+						"ru"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart",
+						"product",
+						"{{delId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clear cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://web-gate.chitai-gorod.ru/api/v1/cart",
+					"protocol": "https",
+					"host": [
+						"web-gate",
+						"chitai-gorod",
+						"ru"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "bookId",
+			"value": ""
+		},
+		{
+			"key": "bookNameId",
+			"value": ""
+		},
+		{
+			"key": "bookUrl",
+			"value": ""
+		},
+		{
+			"key": "delId",
+			"value": ""
+		},
+		{
+			"key": "listOfBooks",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "phrase",
+			"value": "1984",
+			"type": "string"
+		},
+		{
+			"key": "cityId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
