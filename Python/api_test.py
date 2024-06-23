@@ -1,9 +1,9 @@
 from chitaigorodApi import chitaigorodApi
 
+
 api = chitaigorodApi('https://web-gate.chitai-gorod.ru/api/')
 
 # Добавление одного товара в корзину
-
 def test_1():
     id = api.find_book('Удивительная девочка')["id"]
     api.add_to_cart(id)
@@ -15,7 +15,6 @@ def test_1():
     assert id == id_aded
 
 # Изменение количества единиц одного товара в корзине
-
 def test_2():
     id = api.find_book('Удивительная девочка')["id"]
     api.add_to_cart(id)
@@ -39,7 +38,6 @@ def test_3():
     assert result == 204
 
 # Добавление нескольких товаров в корзину
-
 def test_4():
     books = ['1986', 'Сумерки', 'Цветы для Элджернона']
     total_cost = 0

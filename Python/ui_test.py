@@ -1,13 +1,8 @@
-import pytest
-from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
 from pages.MainPage import MainPage
+
 
 cookie = {
     'name': 'access-token',
@@ -17,7 +12,7 @@ cookie = {
 def test_add_book():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     main_page = MainPage(driver)
-    # main_page.cookies(cookie)
+    # main_page.cookies(cookie) кукисы не пробрасывались, добавлялся почему-то второй ключ в Application, по факту авторизации нет
     main_page.enter_values("Удивительная девочка")
     dct = main_page.add_to_cart()
     main_page.go_cart()

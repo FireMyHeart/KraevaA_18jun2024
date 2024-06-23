@@ -2,7 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 
 
 class MainPage:
@@ -45,7 +44,7 @@ class MainPage:
     
     def change_quantity(self, qntt):
         self._driver.find_element(By.CSS_SELECTOR, 'input[type="number"]').send_keys(Keys.BACKSPACE)
-        #self._driver.find_element(By.CSS_SELECTOR, 'input[type="number"]').clear()
+        #self._driver.find_element(By.CSS_SELECTOR, 'input[type="number"]').clear() не работал, поэтому используется Backspace
         self._driver.find_element(By.CSS_SELECTOR, 'input[type="number"]').send_keys(qntt, Keys.RETURN)
     
     def check_quantity(self, text):
