@@ -1,0 +1,1 @@
+{"total":2,"items":[{"uid":"634418b33589618858a228b8e322e83e","name":"API тесты на работу с корзиной","statistic":{"failed":0,"broken":0,"skipped":0,"passed":4,"unknown":0,"total":4}},{"uid":"9e88e0e49eff0190eed1133a2b525e4a","name":"UI тесты на работу с корзиной","statistic":{"failed":0,"broken":0,"skipped":0,"passed":2,"unknown":0,"total":2}}]}
